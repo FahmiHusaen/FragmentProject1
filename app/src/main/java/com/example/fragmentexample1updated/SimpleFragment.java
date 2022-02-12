@@ -16,7 +16,7 @@ public class SimpleFragment extends Fragment {
     private static final int NO = 1;
 
     public SimpleFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
@@ -40,20 +40,22 @@ public class SimpleFragment extends Fragment {
                         TextView textView =
                                 rootView.findViewById(R.id.fragment_header);
                         switch (index) {
-                            case YES: // User chose "Yes".
+                            case YES:
                                 textView.setText(R.string.yes_message);
                                 break;
-                            case NO: // User chose "No".
+                            case NO:
                                 textView.setText(R.string.no_message);
                                 break;
-                            default: // No choice made.
-                                // Do nothing.
+                            default:
                                 break;
                         }
                     }
                 });
 
-        // Inflate the layout for this fragment
         return rootView;
+    }
+
+    public static SimpleFragment newInstance() {
+        return new SimpleFragment();
     }
 }
