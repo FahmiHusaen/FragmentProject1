@@ -1,5 +1,7 @@
 package com.example.fragmentexample1updated;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -7,13 +9,17 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SimpleFragment.OnFragmentInteractionListener {
 
     private Button mButton;
     private boolean isFragmentDisplayed = false;
 
     static final String STATE_FRAGMENT = "state_of_fragment";
+    static final String STATE_CHOICE = "user_choice";
+
+    private int mRadioButtonChoice = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             isFragmentDisplayed = savedInstanceState.getBoolean(STATE_FRAGMENT);
+            mRadioButtonChoice = savedInstanceState.getInt(STATE_CHOICE);
             if (isFragmentDisplayed) {
                 mButton.setText(R.string.close);
             }
@@ -43,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void displayFragment() {
 
-        SimpleFragment simpleFragment = SimpleFragment.newInstance();
+        SimpleFragment simpleFragment =
+                SimpleFragment.newInstance(mRadioButtonChoice);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager
@@ -67,13 +75,22 @@ public class MainActivity extends AppCompatActivity {
                     fragmentManager.beginTransaction();
             fragmentTransaction.remove(simpleFragment).commit();
         }
-
         mButton.setText(R.string.open);
         isFragmentDisplayed = false;
     }
 
+    @Override
+    public void onRadioButtonChoice(int choice) {
+        // Keep the radio button choice to pass it back to the fragment.
+        mRadioButtonChoice = choice;
+        // Show a Toast with the radio button choice.
+        Toast.makeText(this, "Choice is " + Integer.toString(choice),
+                LENGTH_SHORT).show();
+    }
+
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putBoolean(STATE_FRAGMENT, isFragmentDisplayed);
+        savedInstanceState.putInt(STATE_CHOICE, mRadioButtonChoice);
         super.onSaveInstanceState(savedInstanceState);
     }
 }
